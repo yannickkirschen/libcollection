@@ -1,0 +1,66 @@
+name: Release
+
+env:
+    LIB_NAME: libcollection
+    LIB_PATH: build/bin
+
+on:
+    release:
+        types:
+            - created
+
+jobs:
+    build:
+        name: Build for ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                include:
+                    -   os: ubuntu-latest
+                        asset_name: linux-amd64
+
+        steps:
+            -   name: Clone
+                uses: actions/checkout@v2
+
+            -   name: Make Debian Package
+                run: make deb
+
+            -   name: Cache Debain Package
+                uses: actions/cache@v2
+                with:
+                    path: ${{ env.LIB_PATH }}/${{ env.LIB_NAME }}.deb
+                    key: ${{ runner.os }}-${{ hashFiles('**/*') }}
+
+    publish:
+        name: Publish for ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        needs:
+            - build
+
+        strategy:
+            matrix:
+                include:
+                    -   os: ubuntu-latest
+                        asset_name: linux-amd64
+
+        steps:
+            -   name: Clone
+                uses: actions/checkout@v2
+
+            -   name: Get cached Debain Package
+                uses: actions/cache@v2
+                with:
+                    path: ${{ env.LIB_PATH }}/${{ env.LIB_NAME }}.deb
+                    key: ${{ runner.os }}-${{ hashFiles('**/*') }}
+                    restore-keys: |
+                        ${{ runner.os }}-
+
+            -   name: Upload binaries to release
+                uses: svenstaro/upload-release-action@v2
+                with:
+                    repo_token: ${{ secrets.GITHUB_TOKEN }}
+                    file: ${{ env.LIB_PATH }}/${{ env.LIB_NAME }}.deb
+                    asset_name: ${{ env.LIB_NAME }}-${{ matrix.asset_name }}.deb
+                    tag: ${{ github.ref }}

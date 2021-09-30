@@ -1,0 +1,25 @@
+name: Build
+
+on: [ push ]
+
+env:
+    LIB_NAME: libcollection
+    LIB_PATH: build/bin
+
+jobs:
+    build:
+        name: Build for ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                include:
+                    -   os: ubuntu-latest
+                        asset_name: linux-amd64
+
+        steps:
+            -   name: Clone
+                uses: actions/checkout@v2
+
+            -   name: Make Debian Package
+                run: make deb

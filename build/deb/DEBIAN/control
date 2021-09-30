@@ -1,0 +1,6 @@
+Package: libcollection
+Version: 0.1.0
+Architecture: all
+Maintainer: Yannick Kirschen
+Description: A collection framework written in C.
+

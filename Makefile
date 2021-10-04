@@ -6,9 +6,6 @@ ARCH = x86
 CC                 = gcc
 CC_FLAGS           = -std=c99 -Wall -I.
 
-LINKER             = gcc
-LINKER_FLAGS       = -Wall -I. -lm
-
 SRC_DIR            = src
 OBJ_DIR            = build/bin
 BIN_DIR            = build/bin

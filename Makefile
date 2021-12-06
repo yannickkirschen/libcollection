@@ -20,6 +20,8 @@ mkdir              = mkdir -p
 cp                 = cp
 chmod              = chmod
 
+all: build
+
 init:
 	@$(mkdir) $(OBJ_DIR)
 	@$(mkdir) $(BIN_DIR)
@@ -27,15 +29,15 @@ init:
 .PHONY: clean
 clean:
 	@$(rm) $(OBJECTS)
-	@echo "Cleanup complete!"
 
 $(OBJECTS): $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	@$(CC) $(CC_FLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
 
 build: clean init $(OBJECTS)
 	@$(CC) -shared -o $(BIN_DIR)/$(SHARED_OBJECT_NAME).so $(OBJ_DIR)/*.o
-	@echo "Compiled $(BIN_DIR)/$(SHARED_OBJECT_NAME).so successfully!"
+
+demo: build
+	@$(CC) -L $(BIN_DIR) -l $(LIBRARY_NAME) -o $(BIN_DIR)/demo $(OBJ_DIR)/demo.o
 
 deb: build
 	@$(mkdir) build/deb/usr/include/$(LIBRARY_NAME)

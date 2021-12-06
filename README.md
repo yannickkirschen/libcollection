@@ -22,10 +22,10 @@ int main(int argc, char *argv[]) {
     collection_linked_list_append(list, (void *) 3);
 
     int64_t value = (int64_t) collection_linked_list_get(list, 2);
-    printf("%ld\n", value); // 3
+    printf("%lld\n", value); // 3
 
     int64_t valueDel = (int64_t) collection_linked_list_remove(list, 1);
-    printf("%ld\n", valueDel); // 2
+    printf("%lld\n", valueDel); // 2
 
     bool contains = collection_linked_list_contains(list, (void *) 10);
     printf("%d\n", contains); // 0
@@ -37,3 +37,12 @@ apt install -f <libcollection>.so
 gcc -L /usr/lib/collection -l collection -o <out> <in>.c
 ./<out>
 ```
+
+## Demo
+
+```shell
+make demo
+build/bin/demo
+```
+
+Have a look at `src/demo.c` ...
